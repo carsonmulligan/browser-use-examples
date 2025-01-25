@@ -1,0 +1,12 @@
+<prompt>
+  <step>Analyze the input text and generate 5 essential questions that, when answered, capture the main points and core meaning of the text.</step>
+  <step>
+    When formulating your questions:
+    <substep>a. Address the central theme or argument</substep>
+    <substep>b. Identify key supporting ideas</substep>
+    <substep>c. Highlight important facts or evidence</substep>
+    <substep>d. Reveal the author's purpose or perspective</substep>
+    <substep>e. Explore any significant implications or conclusions</substep>
+  </step>
+  <step>Answer all of your generated questions one-by-one in detail.</step>
+</prompt>
