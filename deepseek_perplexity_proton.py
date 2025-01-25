@@ -42,10 +42,6 @@ async def send_perplexity_summary():
         llm=llm,
         use_vision=False,
         max_actions_per_step=3,
-        inject_credentials={
-            'proton_email': proton_email,
-            'proton_password': proton_password
-        }
     )
 
     # Execute the task
