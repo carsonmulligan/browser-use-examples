@@ -25,23 +25,33 @@ async def send_perplexity_summary():
         api_key=SecretStr(api_key),
     )
 
-    # Create agent with multi-step instructions
+    # Create agent with enhanced instructions
     agent = Agent(
         task=(
             "1. Go to perplexity.ai\n"
             "2. Search: 'Latest updates on the US border security situation'\n"
             "3. Extract key findings and sources\n"
             "4. Summarize results in 3 bullet points with sources\n"
-            "5. Go to mail.proton.me\n"
-            "6. Login using email and password from environment\n"
-            "7. Compose new email to profiles.co@gmail.com\n"
-            "8. Subject: 'US Border Situation Update - Perplexity Findings'\n"
-            "9. Body: Include summary and source links\n"
-            "10. Send email"
+            "5. Open new tab and go to mail.proton.me\n"
+            "6. On login page:\n"
+            "   a. Click email input field\n"
+            "   b. Type: " + proton_email + "\n"
+            "   c. Click password input field\n"
+            "   d. Type: " + proton_password + "\n"
+            "   e. Click 'Sign in' button\n"
+            "7. After login, click 'Compose' button\n"
+            "8. In recipient field: profiles.co@gmail.com\n"
+            "9. Subject: 'US Border Situation Update - Perplexity Findings'\n"
+            "10. In email body:\n"
+            "    a. Paste the summary\n"
+            "    b. Add source links\n"
+            "11. Click 'Send' button\n"
+            "12. Verify confirmation message appears"
         ),
         llm=llm,
         use_vision=False,
-        max_actions_per_step=3,
+        max_actions_per_step=5,  # Increased for complex steps
+        page_load_timeout=30  # Added timeout for email client loading
     )
 
     # Execute the task
