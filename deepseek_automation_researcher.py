@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from pydantic import SecretStr
-from browser_use import Agent, Browser, BrowserContextConfig
+from browser_use import Agent, Browser, BrowserContext
 
 # Load environment variables
 load_dotenv()
@@ -16,14 +16,15 @@ async def automation_research_report():
         api_key=SecretStr(os.getenv('DEEPSEEK_API_KEY'))
     )
 
-    # Create browser context with custom user agent
-    context_config = BrowserContextConfig(
-        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
-    )
-    
     # Initialize browser with visible window
     browser = Browser()
-    context = browser.new_context(config=context_config)
+    context = BrowserContext(
+        browser=browser,
+        config={
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+            "headless": False
+        }
+    )
 
     # Create research and email agent
     agent = Agent(
