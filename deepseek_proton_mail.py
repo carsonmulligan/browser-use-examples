@@ -2,44 +2,48 @@ import asyncio
 import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from browser_use import Agent
+from browser_use import Agent, Browser, BrowserConfig
+from pydantic import SecretStr
 
 # Load environment variables
 load_dotenv()
 
-# Retrieve Proton Mail credentials from environment
-proton_email = os.getenv('PROTON_MAIL_EMAIL')
-proton_password = os.getenv('PROTON_MAIL_PASSWORD')
-
-if not proton_email or not proton_password:
-    raise ValueError('PROTON_MAIL_EMAIL and PROTON_MAIL_PASSWORD must be set in .env')
-
 async def send_proton_email():
-    # Configure the OpenAI model (GPT-4o recommended for best performance)
-    llm = ChatOpenAI(model="gpt-4o")
+    # Configure browser with security settings
+    browser = Browser(config=BrowserConfig(
+        headless=False,
+        disable_security=False
+    ))
 
-    # Create browser-use agent with detailed email sending instructions
-    agent = Agent(
-        task=(
-            "1. Go to mail.proton.me\n"
-            "2. Click 'Sign in' and log in with email and password\n"
-            "3. Click 'New message' button\n"
-            "4. In compose window:\n"
-            "   - To: profiles.co@gmail.com\n"
-            "   - Subject: Automated Test Email\n"
-            "   - Body: Hello World from Browser-Use\n"
-            "5. Click 'Send' button\n"
-            "6. Verify email sent confirmation appears"
-        ),
-        llm=llm,
-        use_vision=True,  # Enable vision for better UI interaction
-        browser_config={
-            'headless': False,  # Show browser window for debugging
-            'disable_security': False  # Keep security enabled for Proton Mail
-        }
+    # Configure DeepSeek model
+    llm = ChatOpenAI(
+        base_url='https://api.deepseek.com/v1',
+        model='deepseek-chat',
+        api_key=SecretStr(os.getenv('DEEPSEEK_API_KEY'))
     )
 
-    # Execute the task
+    # Get credentials from environment
+    email = os.getenv('PROTON_MAIL_EMAIL')
+    password = os.getenv('PROTON_MAIL_PASSWORD')
+
+    agent = Agent(
+        task=(
+            f"1. Navigate to mail.proton.me\n"
+            f"2. Click 'Sign in' button\n"
+            f"3. In email field input: {email}\n"
+            f"4. In password field input: {password}\n"
+            f"5. Click 'Sign in' button\n"
+            f"6. Click 'New message' button\n"
+            f"7. In To field enter: profiles.co@gmail.com\n"
+            f"8. In Subject field enter: DeepSeek Automated Test\n"
+            f"9. In body type: Hello World from DeepSeek R1\n"
+            f"10. Click 'Send' and verify confirmation"
+        ),
+        llm=llm,
+        browser=browser,
+        use_vision=True
+    )
+
     result = await agent.run()
     print("Email sending result:", result)
 
