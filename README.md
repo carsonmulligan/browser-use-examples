@@ -72,6 +72,19 @@ Agent(
    │◀─200 OK──────────────────│
 ```
 
+### YouTube Automation (`deepseek_youtube.py`)
+``` 
+[Agent]                   [YouTube]
+   │                         │
+   │──GET /──────────────────▶│
+   │◀─Page DOM─────────────── │
+   │──Fill search box────────▶│
+   │──Click search button────▶│
+   │◀─Results DOM─────────────│
+   │──Click video result─────▶│
+   │◀─Video Started───────────│
+```
+
 ## Core Interaction Pattern
 ```
 ┌────────────┐   Chromium   ┌───────────┐
@@ -84,4 +97,9 @@ Agent(
             • Network Intercept
             • Performance Metrics
 ```
+
+- Video discovery workflow
+- Filter system integration
+- Playback verification
+- Adaptive wait conditions
 
