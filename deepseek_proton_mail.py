@@ -34,7 +34,7 @@ async def send_proton_email():
             f"3. Enter email: {email}\n"
             f"4. Enter password: {password}\n"
             "5. Click 'New message'\n"
-            "6. Send email to profiles.co@gmail.com with subject 'Test' and body 'Hello World'"
+            f"6. Send email to {os.getenv('PROTON_MAIL_RECIPIENT')} with subject 'I love you' and body 'This message was sent automatically with DeepSeek'"
         ),
         llm=llm,
         browser=browser,
