@@ -1,43 +1,34 @@
 import asyncio
-from browser_use import Agent, Browser, BrowserConfig
-from langchain_openai import ChatOpenAI
 import os
 from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from browser_use import Agent
 
 load_dotenv()
 
 async def youtube_automation():
+    llm = ChatOpenAI(
+        base_url='https://api.deepseek.com/v1',
+        model='deepseek-chat',
+        api_key=os.getenv('DEEPSEEK_API_KEY'),
+        temperature=0.1
+    )
+
     agent = Agent(
         task=(
-            "1. Navigate to youtube.com\n"
-            "2. Accept cookies if prompted\n"
-            "3. Search for 'pacific war in color documentary'\n"
-            "4. Click filter button\n"
-            "5. Select 'Long' duration filter\n"
-            "6. Click first video result\n"
-            "7. Wait for video to start playing"
+            "1. Go to youtube.com\n"
+            "2. Search for 'pacific war in color documentary'\n"
+            "3. Click first video result\n"
+            "4. Verify video playback starts"
         ),
-        llm=ChatOpenAI(
-            base_url='https://api.deepseek.com/v1',
-            model='deepseek-chat',
-            api_key=os.getenv('DEEPSEEK_API_KEY'),
-            temperature=0.1
-        ),
-        browser=Browser(
-            config=BrowserConfig(
-                headless=False,
-                chrome_options=[
-                    "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-                ],
-                window_size=(1280, 720)
-            )
-        ),
-        action_delay=1.5,
-        page_load_timeout=30
+        llm=llm,
+        browser=False,  # Use default browser config
+        use_vision=False,
+        max_actions_per_step=2
     )
-    
+
     result = await agent.run()
-    print("Youtube automation result:", result)
+    print("YouTube automation result:", result)
 
 if __name__ == "__main__":
     asyncio.run(youtube_automation()) 
